@@ -34,7 +34,14 @@ def home():
 def register():
     # Handle user registration form
     form = RegistrationForm()
+
     if form.validate_on_submit():
+        # Check if the email already exists in the database
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('Email already exists.', 'error')
+            return redirect(url_for('register'))
+
         # Create new user from form data
         new_user = User(
             name=form.name.data,
@@ -45,6 +52,7 @@ def register():
         db.session.commit()
         flash('User registered successfully!', 'success')
         return redirect(url_for('view_users'))
+
     return render_template('register.html', form=form)
 
 @app.route('/users')
@@ -59,15 +67,25 @@ def update(user_id):
     # Load user by ID and populate update form
     user = User.query.get_or_404(user_id)
     form = UpdateForm(obj=user)
+
     if form.validate_on_submit():
-        # Update user data with form values
+        # Check if the new email is different and already taken by another user
+        if form.email.data != user.email:
+            existing = User.query.filter_by(email=form.email.data).first()
+            if existing:
+                flash("Email already exists.", "error")
+                return redirect(url_for('update', user_id=user.id))
+
+        # Apply updates
         user.name = form.name.data
         user.email = form.email.data
         user.age = form.age.data
         db.session.commit()
         flash('User updated!', 'info')
         return redirect(url_for('view_users'))
+
     return render_template('update.html', form=form, user=user)
+
 
 @app.route('/delete/<int:user_id>', methods=['POST'])
 def delete(user_id):
