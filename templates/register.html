@@ -1,0 +1,64 @@
+﻿{#
+    /**
+     * File: register.html
+     *
+     * Purpose:
+     * This template renders the user registration form. It extends the base layout
+     * and uses Flask-WTF to generate fields and handle form validation errors.
+     *
+     * Features:
+     * - Displays a registration form for name, email, and age
+     * - Shows validation error messages for each field
+     * - Uses CSRF protection
+     * - Provides a link to view all registered users
+     */
+#}
+
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Register User</h2>
+
+<form method="post">
+    {{ form.hidden_tag() }}  {# CSRF token and hidden fields #}
+
+    <div class="form-group">
+        {{ form.name.label }}
+        {{ form.name(class_="form-control", required=False) }}
+        {% for error in form.name.errors %}
+            <div class="error-box">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        {{ form.email.label }}
+        {{ form.email(class_="form-control", required=False) }}
+        {% for error in form.email.errors %}
+            <div class="error-box">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        {{ form.age.label }}
+        {{ form.age(class_="form-control", required=False, max=None, min=None) }}
+        {% for error in form.age.errors %}
+            <div class="error-box">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+
+<a href="{{ url_for('view_users') }}">View Users</a>
+
+{% endblock %}
+
+{#
+    /**
+     * End of register.html
+     * This form submits data to the /register route using POST.
+     * Validation errors are displayed below each corresponding field.
+     */
+#}

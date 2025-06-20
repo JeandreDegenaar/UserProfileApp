@@ -1,0 +1,156 @@
+﻿{#
+    /**
+     * File: base.html
+     *
+     * Purpose:
+     * This is the base layout template used by all other pages in the Flask app.
+     * It includes shared HTML structure, styling, and support for displaying flash messages.
+     *
+     * Features:
+     * - Applies a clean, responsive design with CSS styling
+     * - Provides a styled container for form inputs and user lists
+     * - Displays flash messages for user feedback
+     * - Defines a content block that can be overridden by extending templates
+     */
+#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User App</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 40px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button, input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover, input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        .flash-message {
+            background-color: #dff0d8;
+            padding: 10px;
+            border-left: 5px solid #3c763d;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        li {
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        .error-box {
+            color: #a94442;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-size: 0.95em;
+        }
+        .user-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Remove border and spacing from the form itself */
+        .user-actions form {
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+
+        /* Button base styles */
+        .user-actions button {
+            padding: 6px 14px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            height: 32px;
+        }
+
+        /* Update button styles */
+        .update-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .update-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Delete button styles */
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    {# Display flash messages to users (e.g., on successful form submissions) #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {# Placeholder where child templates inject their content #}
+    {% block content %}{% endblock %}
+</body>
+</html>
+

@@ -1,0 +1,62 @@
+﻿{#
+    /**
+     * Template: users.html
+     *
+     * Purpose:
+     * - Display a list of registered users dynamically.
+     * - Provide "Update" and "Delete" actions for each user.
+     * - Ensure CSRF protection for delete forms.
+     * - Encourage consistent UI design through styling.
+     */
+#}
+
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Registered Users</h2>
+
+<ul>
+    {% for user in users %}
+    <li>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>
+                {{ user.name }} ({{ user.email }}) - Age: {{ user.age }}
+            </span>
+            <!--
+                Container for user action buttons (Update & Delete).
+                Uses flexbox (via CSS class .user-actions) to align items side-by-side with spacing.
+            -->
+            <div class="user-actions">
+
+                <!--
+                    Update button wrapped in an anchor tag to redirect to the update page
+                    for the selected user.
+                -->
+                <a href="{{ url_for('update', user_id=user.id) }}">
+                    <!-- Styled as a blue button via the 'update-btn' class -->
+                    <button type="button" class="update-btn">Update</button>
+                </a>
+
+                <!--
+                    Form used to securely delete the user via POST request.
+                    Includes CSRF protection using Flask-WTF's token.
+                -->
+                <form action="{{ url_for('delete', user_id=user.id) }}" method="post">
+                    {{ delete_forms[user.id].csrf_token }}  <!-- CSRF protection token -->
+
+                    <!--
+                        Delete button with confirmation prompt.
+                        Styled as a red button via the 'delete-btn' class.
+                    -->
+                    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure?');">Delete</button>
+                </form>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url_for('register') }}">Register New User</a>
+
+{% endblock %}
+
